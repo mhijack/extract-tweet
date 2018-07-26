@@ -62,11 +62,9 @@ public class Extract {
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
         Set<String> usernames = new HashSet<>();
-
         for (Tweet tweet: tweets) {
             usernames.addAll(returnUsername(tweet));
         }
-
         return usernames;
     }
 
