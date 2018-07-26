@@ -36,6 +36,10 @@ public class FilterTest {
 
         assertEquals("expected singleton list", 1, writtenBy.size());
         assertTrue("expected list to contain tweet", writtenBy.contains(tweet1));
+
+        List<Tweet> writtenBy2 = Filter.writtenBy(Arrays.asList(tweet1, tweet2), "jack");
+
+        assertTrue("expected list to be empty", writtenBy2.size() == 0);
     }
 
     @Test
@@ -57,6 +61,10 @@ public class FilterTest {
         assertFalse("expected non-empty list", containing.isEmpty());
         assertTrue("expected list to contain tweets", containing.containsAll(Arrays.asList(tweet1, tweet2)));
         assertEquals("expected same order", 0, containing.indexOf(tweet1));
+
+        List<Tweet> containing2 = Filter.containing(Arrays.asList(tweet1, tweet2), Arrays.asList("lkjasdlkjfalkdflja"));
+
+        assertTrue("expected empty list", containing2.size() == 0);
     }
 
     /*
