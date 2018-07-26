@@ -3,9 +3,7 @@
  */
 package twitter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * SocialNetwork provides methods that operate on a social network.
@@ -18,10 +16,6 @@ import java.util.Set;
  * Twitter usernames are not case sensitive, so "ernie" is the same as "ERNie".
  * A username should appear at most once as a key in the map or in any given
  * map[A] set.
- *
- * DO NOT change the method signatures and specifications of these methods, but
- * you should implement their method bodies, and you may add new public or
- * private methods or classes if you like.
  */
 public class SocialNetwork {
 
@@ -41,20 +35,66 @@ public class SocialNetwork {
      *         either authors or @-mentions in the list of tweets.
      */
     public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        Map<String, Set<String>> followerNetwork = new HashMap<>();
+        // Loop through each tweet:
+        // Assign author as key, and all of author's mentions as a set of values
+        for (Tweet tweet: tweets) {
+            String author = tweet.getAuthor();
+
+            Set<String> following = Extract.returnUsername(tweet);
+            following.remove(author.toLowerCase());
+
+            if (!followerNetwork.containsKey(author)) {
+                // author key doesn't exist
+                followerNetwork.put(author.toLowerCase(), following);
+            } else {
+                // author already registered, get its value and append
+                following.addAll(followerNetwork.get(author));
+                followerNetwork.replace(author.toLowerCase(), following);
+            }
+        }
+        return followerNetwork;
     }
 
     /**
      * Find the people in a social network who have the greatest influence, in
      * the sense that they have the most followers.
-     *
-     * @param followsGraph
+            *
+            * @param followsGraph
      *            a social network (as defined above)
      * @return a list of all distinct Twitter usernames in followsGraph, in
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
-    }
+        Set<String> keySet = followsGraph.keySet();
+        Map<String, Integer> influencerMap = new HashMap<>();
 
+        for (String author: keySet) {
+            Set<String> following = followsGraph.get(author.toLowerCase());
+
+            for (String follow: following) {
+                if (influencerMap.get(follow.toLowerCase()) >= 0) {
+                    influencerMap.replace(follow.toLowerCase(), influencerMap.get(follow.toLowerCase()) + 1);
+                } else {
+                    influencerMap.put(follow.toLowerCase(), 1);
+                }
+            }
+        }
+
+        List<String> followersRank = new ArrayList<>();
+        while (influencerMap.size() > 0) {
+            String mostFollower = null;
+            int followerCount = 0;
+
+            for (Map.Entry<String, Integer> user: influencerMap.entrySet()) {
+                if (user.getValue() >= followerCount) {
+                    followerCount = user.getValue();
+                    mostFollower = user.getKey();
+                }
+            }
+            followersRank.add(mostFollower);
+            influencerMap.remove(mostFollower);
+        }
+        return followersRank;
+    }
 }

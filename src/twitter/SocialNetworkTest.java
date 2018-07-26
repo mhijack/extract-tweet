@@ -5,6 +5,7 @@ package twitter;
 
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.*;
 
 import static org.junit.Assert.assertTrue;
@@ -12,10 +13,17 @@ import static org.junit.Assert.assertTrue;
 public class SocialNetworkTest {
 
     /*
-     * TODO: your testing strategies for these methods should go here.
+     * TODO: testing strategies...
      * See the ic03-testing exercise for examples of what a testing strategy comment looks like.
      * Make sure you have partitions.
      */
+
+    private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
+    private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
+
+    private static final Tweet tweet1 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "asdf @jack rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet3 = new Tweet(2, "Jack", "asdf @jack rivest talk in 30 minutes #hype", d2);
 
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
@@ -27,6 +35,18 @@ public class SocialNetworkTest {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(new ArrayList<>());
 
         assertTrue("expected empty graph", followsGraph.isEmpty());
+
+        Map<String, Set<String>> followsGraph2 = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet1, tweet2));
+
+        assertTrue("expected graph with 1 key", followsGraph2.size() == 1);
+
+        Set<String> jackSet = new HashSet<>();
+        jackSet.add("jack");
+        assertTrue("expected 'bbitdiddle' mapped to 'jack'", followsGraph2.get("bbitdiddle").equals(jackSet));
+
+        Map<String, Set<String>> followsGraph3 = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet3));
+        assertTrue("expected graph has 1 key", followsGraph3.size() == 1);
+        assertTrue("expected empty graph", followsGraph3.get("Jack".toLowerCase()).isEmpty());
     }
 
     @Test
