@@ -73,7 +73,7 @@ public class SocialNetwork {
             Set<String> following = followsGraph.get(author.toLowerCase());
 
             for (String follow: following) {
-                if (influencerMap.get(follow.toLowerCase()) >= 0) {
+                if (influencerMap.get(follow.toLowerCase()) != null) {
                     influencerMap.replace(follow.toLowerCase(), influencerMap.get(follow.toLowerCase()) + 1);
                 } else {
                     influencerMap.put(follow.toLowerCase(), 1);

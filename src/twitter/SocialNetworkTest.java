@@ -55,6 +55,21 @@ public class SocialNetworkTest {
         List<String> influencers = SocialNetwork.influencers(followsGraph);
 
         assertTrue("expected empty list", influencers.isEmpty());
+
+        Map<String, Set<String>> followsGraph2 = new HashMap<>();
+        Set<String> followers = new HashSet<>();
+        Set<String> followers2 = new HashSet<>();
+        followers.add("melody");
+        followers.add("clow");
+        followers.add("jason");
+        followers2.add("jack");
+        followers2.add("jason");
+        followsGraph2.put("jack", followers);
+        followsGraph2.put("melody", followers2);
+        List<String> influencers2 = SocialNetwork.influencers(followsGraph2);
+
+        assertTrue("expected 'jason' at index 0", influencers2.get(0).equals("jason"));
+        // assertEquals("jack", influencers2);
     }
 
     /*
